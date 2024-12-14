@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultado de Ajustes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .container {
+            text-align: center;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 90%;
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            color: #333;
+        }
+        p {
+            font-size: 1.2em;
+            color: #555;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 1.3em;
+            color: #007BFF;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Resultado del Ajuste PCD</h1>
+
+        <div id="resultPCD">Cargando resultados...</div>
+        <div id="resultAdjustment"></div>
+        <div id="resultRemaining"></div>
+
+        <button onclick="goBack()">Volver</button>
+    </div>
+
+    <script>
+        // Obtener los parámetros de la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const A = parseFloat(urlParams.get('A'));
+        const B = parseFloat(urlParams.get('B'));
+        const C = parseFloat(urlParams.get('C'));
+
+        // Definir valor base
+        const baseValue = 34.670;
+
+        // Calcular la diferencia de cada valor respecto a 34.670
+        const diffA = Math.abs(A - baseValue);
+        const diffB = Math.abs(B - baseValue);
+        const diffC = Math.abs(C - baseValue);
+
+        // Determinar el valor más cercano a 34.670
+        let pcd = baseValue;
+        let closestValue = 0;
+        let adjustmentFormula = '';
+        let remainingValues = [];
+        
+        if (diffA <= diffB && diffA <= diffC) {
+            pcd = A;
+            closestValue = 'PCD-H';
+            remainingValues = ['PCD-B', 'PCD-E'];
+        } else if (diffB <= diffA && diffB <= diffC) {
+            pcd = B;
+            closestValue = 'PCD-B';
+            remainingValues = ['PCD-H', 'PCD-E'];
+        } else {
+            pcd = C;
+            closestValue = 'PCD-E';
+            remainingValues = ['PCD-H', 'PCD-B'];
+        }
+
+        // Calcular el ajuste en MAP159 #903
+        const adjustmentPCD = ((pcd - baseValue) / 2) * -1;
+
+        // Mostrar el ajuste para el valor más cercano (PCD)
+        document.getElementById('resultAdjustment').textContent = `Ajuste en MAP159 #903 = ${adjustmentPCD.toFixed(3)}`;
+
+        // Calcular y mostrar los ajustes para los otros deslizadores
+        let remainingAdjustmentText = '';
+        if (remainingValues.includes('PCD-H')) {
+            const adjustmentA = ((A - baseValue) / 2);
+            remainingAdjustmentText += `Ajuste en PCD-H #913 = ${adjustmentA.toFixed(3)}<br>`;
+        }
+        if (remainingValues.includes('PCD-B')) {
+            const adjustmentB = ((B - baseValue) / 2);
+            remainingAdjustmentText += `Ajuste en PCD-B #914 = ${adjustmentB.toFixed(3)}<br>`;
+        }
+        if (remainingValues.includes('PCD-E')) {
+            const adjustmentC = ((C - baseValue) / 2);
+            remainingAdjustmentText += `Ajuste en PCD-E #915 = ${adjustmentC.toFixed(3)}<br>`;
+        }
+
+        document.getElementById('resultRemaining').innerHTML = remainingAdjustmentText;
+
+        // Función para regresar a la página anterior
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</body>
+</html>
