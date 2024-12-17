@@ -96,15 +96,15 @@
         // Calcular y mostrar los ajustes para los otros deslizadores
         let remainingAdjustmentText = '';
         if (remainingValues.includes('PCD-H')) {
-            const adjustmentA = ((A - baseValue) / 2);
+            const adjustmentA = ((A - pcd) / 2);
             remainingAdjustmentText += `Ajuste en PCD-H #913 = ${adjustmentA.toFixed(3)}<br>`;
         }
         if (remainingValues.includes('PCD-B')) {
-            const adjustmentB = ((B - baseValue) / 2);
+            const adjustmentB = ((B - pcd) / 2);
             remainingAdjustmentText += `Ajuste en PCD-B #914 = ${adjustmentB.toFixed(3)}<br>`;
         }
         if (remainingValues.includes('PCD-E')) {
-            const adjustmentC = ((C - baseValue) / 2);
+            const adjustmentC = ((C - pcd) / 2);
             remainingAdjustmentText += `Ajuste en PCD-E #915 = ${adjustmentC.toFixed(3)}<br>`;
         }
 
