@@ -48,6 +48,7 @@
         <div id="resultPCD">Cargando resultados...</div>
         <div id="resultAdjustment"></div>
         <div id="resultRemaining"></div>
+        <div id="vdaValues"></div>
 
         <button onclick="goBack()">Volver</button>
     </div>
@@ -67,10 +68,13 @@
         const diffB = Math.abs(B - baseValue);
         const diffC = Math.abs(C - baseValue);
 
+        // Variables globales para ajustes adicionales
+        let vda1 = 0;
+        let vda2 = 0;
+
         // Determinar el valor más cercano a 34.670
         let pcd = baseValue;
-        let closestValue = 0;
-        let adjustmentFormula = '';
+        let closestValue = '';
         let remainingValues = [];
         
         if (diffA <= diffB && diffA <= diffC) {
@@ -90,9 +94,6 @@
         // Calcular el ajuste en MAP159 #903
         const adjustmentPCD = ((pcd - baseValue) / 2) * -1;
 
-        // Mostrar el ajuste para el valor más cercano (PCD)
-        document.getElementById('resultAdjustment').textContent = `Ajuste en MAP159 #903 = ${adjustmentPCD.toFixed(3)}`;
-
         // Calcular y mostrar los ajustes para los otros deslizadores
         let remainingAdjustmentText = '';
         if (remainingValues.includes('PCD-H')) {
@@ -101,14 +102,25 @@
         }
         if (remainingValues.includes('PCD-B')) {
             const adjustmentB = ((B - pcd) / 2);
+            vda1 = ((((15 * adjustmentB * adjustmentB) + (3 * adjustmentB) - 0.3445)+0.35)/2);
             remainingAdjustmentText += `Ajuste en PCD-B #914 = ${adjustmentB.toFixed(3)}<br>`;
         }
         if (remainingValues.includes('PCD-E')) {
             const adjustmentC = ((C - pcd) / 2);
+            vda2 = ((((6.96 * adjustmentC * adjustmentC) - (0.96 * adjustmentC) - 0.348)+0.35)/2);
             remainingAdjustmentText += `Ajuste en PCD-E #915 = ${adjustmentC.toFixed(3)}<br>`;
         }
 
+        // Mostrar ajustes adicionales
         document.getElementById('resultRemaining').innerHTML = remainingAdjustmentText;
+
+        // Imprimir resultados finales
+        document.getElementById('resultAdjustment').innerHTML = 
+            `Ajuste en MAP159 #903 = ${(adjustmentPCD - vda1 - vda2).toFixed(3)}`;
+
+        // Imprimir VDA1 y VDA2
+        document.getElementById('vdaValues').innerHTML = 
+            `VDA1 = ${vda1.toFixed(3)}<br>VDA2 = ${vda2.toFixed(3)}`;
 
         // Función para regresar a la página anterior
         function goBack() {
