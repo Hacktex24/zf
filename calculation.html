@@ -71,8 +71,8 @@
         const B = parseFloat(params.get('B'));
 
         // Calcular los ajustes
-        const adjustmentPCD = ((A + 0.35) / 2) * -1;
-        const adjustmentBP = (B - 0.160);
+        const adjustmentPCD = ((A + 0.34) / 2) * -1;
+        const adjustmentBP = (B - 0.150);
 
         // Mostrar los resultados en la página
         document.getElementById('adjustmentPCD').textContent = `Ajuste de PCD (#903): ${adjustmentPCD.toFixed(3)}`;
